@@ -128,7 +128,12 @@
     },
 
     hasAnyMajorDiagonalConflicts: function(){
-      return false; // fixme
+      var majorDsWithConflict = 0;
+      var l = this.get('n');
+      for (var i = 0; i < l; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {majorDsWithConflict +=1}
+      }
+      return !!majorDsWithConflict;
     },
 
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
