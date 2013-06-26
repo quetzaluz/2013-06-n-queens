@@ -58,7 +58,14 @@
     // todo: fill in all these functions - they'll help you!
 
     hasRowConflictAt: function(rowIndex){
-      return false; // fixme
+      var presentInRow = 0;
+      for (var i =0; i < this.get(rowIndex).length; i++) {
+        if (this.get(rowIndex)[i] === 1) {
+          presentInRow += 1;
+        }
+      }
+      if (presentInRow > 1) return true;
+      else return false;
     },
 
     hasAnyRowConflicts: function(){
