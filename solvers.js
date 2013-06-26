@@ -9,7 +9,8 @@ window.findNRooksSolution = function(n){
   //opting for the solution before. I found this solution from the following:
   //http://logicmason.com/2013/a-recursive-algorithm-for-generating-all-n-rooks-solutions-and-a-linear-time-n-queens-solution/
   //I plan to revisit this and come up with a solution with a more iterative structure.
-  var board = new Board(makeEmptyMatrix(n));
+  if (typeof n === 'number') {var board = new Board(makeEmptyMatrix(n));}
+  else {return false;}
   var solution = board.rows();
   for (var i = 0; i < n/2; i++) {
     if ((i+1)*2-1 < n) { 
@@ -24,8 +25,19 @@ window.findNRooksSolution = function(n){
 };
 
 window.countNRooksSolutions = function(n){
-  var solutionCount = undefined; //fixme
-
+  var allSolutions = _.memoize(function(n) {
+    if (!n) return [];
+    if (n === 1) return [[[true]]]; //One piece solutions true no matter what
+    var solutions = [];
+    for (var i = 0; i < n; i++) {
+      _.each(allSolutions(n-1), function(n){
+        //By recursively calling allSolutions with n-1 as above, not infinite
+        solutions.push(window.findNRooksSolution(n));
+      });
+    }
+    return solutions;
+  });
+  solutionCount = allSolutions(n).length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
