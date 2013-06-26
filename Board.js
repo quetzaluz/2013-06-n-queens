@@ -59,17 +59,21 @@
 
     hasRowConflictAt: function(rowIndex){
       var presentInRow = 0;
-      for (var i =0; i < this.get(rowIndex).length; i++) {
+      for (var i =0; i < this.rows()[0].length; i++) {
         if (this.get(rowIndex)[i] === 1) {
           presentInRow += 1;
         }
       }
-      if (presentInRow > 1) return true;
-      else return false;
+      return !!presentInRow;
     },
 
     hasAnyRowConflicts: function(){
-      return false; // fixme
+      var rowsWithConflict = 0;
+      rows = this.get('n');
+      for (var i = 0; i < rows; i++) {
+        if (this.hasRowConflictAt(i)) {rowsWithConflict +=1}
+      }
+      return !!rowsWithConflict;
     },
 
     hasColConflictAt: function(colIndex){
