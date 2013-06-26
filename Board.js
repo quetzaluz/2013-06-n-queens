@@ -99,7 +99,32 @@
     },
 
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+    //charted out results from _getFirstRowColumnIndexForMajorDiagonalOn
+    //to figure out how major diagonal indices are      0  1  2  3
+    //generated. My results ended up looking like     ------------
+    //This. Then decided that the best way to seek  0|  0  1  2  3
+    //conflicts it to iterate over every value on   1| -1  0  1  2
+    //the board to see if it has this major index.  2| -2 -1  0  1
+    //The operation time for this is n^2 -- bad.    3| -3 -2 -1  0
+    //
+    // For now I am just trying to get this to work, but this can easily
+    // be refactored such that the col and row index are both increased
+    // by one, thus checking only diagonal values.
+
+      var presentInMajorD = 0;
+      majorIndex = this._getFirstRowColumnIndexForMajorDiagonalOn(0, majorDiagonalColumnIndexAtFirstRow);
+      var l = this.get('n');
+      for (var i = 0; i < l; i++) {
+        for (var j = 0; j < l; j++) {
+          if (this._getFirstRowColumnIndexForMajorDiagonalOn(i, j) === majorIndex) {
+            if (this.get(i)[j] === 1) {
+              presentInMajorD += 1;
+            }
+          }
+        }
+      }
+      if (presentInMajorD > 1) {return true;}
+      else {return false;}
     },
 
     hasAnyMajorDiagonalConflicts: function(){
