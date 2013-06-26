@@ -137,11 +137,34 @@
     },
 
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+      //charted out results from _getFirstRowColumnIndexForMinorDiagonalOn
+      //to figure out how minor diagonal indices are       0  1  2  3
+      //generated. Similar to the case above, what's     ------------
+      //important is that we notice that indices are   0|  0  1  2  3
+      //shared by diagonals, the values do not matter. 1|  1  2  3  4  
+      //Similar to the above, my initial solution has  2|  2  3  4  5
+      //poor O(n^2) time, but it works. Will refactor. 3|  3  4  5  6
+      var presentInMinorD = 0;
+      minorIndex = this._getFirstRowColumnIndexForMinorDiagonalOn(0, minorDiagonalColumnIndexAtFirstRow);
+      var l = this.get('n');
+      for (var i = 0; i < l; i++) {
+        for (var j = 0; j < l; j++) {
+          if (this._getFirstRowColumnIndexForMinorDiagonalOn(i, j) === minorIndex) {
+            if (this.get(i)[j] === 1) {presentInMinorD += 1;}
+          }
+        }
+      }
+      if (presentInMinorD > 1) {return true;}
+      else {return false;}
     },
 
     hasAnyMinorDiagonalConflicts: function(){
-      return false; // fixme
+      var minorDsWithConflict = 0;
+      var l = this.get('n');
+      for (var i = 0; i < l; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {minorDsWithConflict +=1}
+      }
+      return !!minorDsWithConflict;
     }
 
   });
