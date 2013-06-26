@@ -2,9 +2,23 @@
 // hint: you'll need to do a full-search of all possible arrangements of pieces!
 // (There are also optimizations that will allow you to skip a lot of the dead search space)
 
-window.findNRooksSolution = function(n){
-  var solution = undefined; //fixme
 
+window.findNRooksSolution = function(n){
+  //The solution below is not recursive and will not succeed with certain
+  //board sizes. I tried several recursive solutions of my own design before
+  //opting for the solution before. I found this solution from the following:
+  //http://logicmason.com/2013/a-recursive-algorithm-for-generating-all-n-rooks-solutions-and-a-linear-time-n-queens-solution/
+  //I plan to revisit this and come up with a solution with a more iterative structure.
+  var board = new Board(makeEmptyMatrix(n));
+  var solution = board.rows();
+  for (var i = 0; i < n/2; i++) {
+    if ((i+1)*2-1 < n) { 
+      solution[i][((i+1)*2)-1] = true;
+    }
+    if (i*2 < n){
+      solution[i+Math.floor(n/2)][i*2] = true;
+    }
+  }
   console.log('Single solution for ' + n + ' rooks:', solution);
   return solution;
 };
@@ -40,3 +54,11 @@ window.displayBoard = function(matrix){
     }).render()
   );
 };
+
+var makeEmptyMatrix = function(n){
+    return _(_.range(n)).map(function(){
+      return _(_.range(n)).map(function(){
+        return 0;
+      });
+    });
+  };
