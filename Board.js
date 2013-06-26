@@ -64,12 +64,13 @@
           presentInRow += 1;
         }
       }
-      return !!presentInRow;
+      if (presentInRow > 1) {return true;}
+      else {return false;}
     },
 
     hasAnyRowConflicts: function(){
       var rowsWithConflict = 0;
-      rows = this.get('n');
+      var rows = this.get('n');
       for (var i = 0; i < rows; i++) {
         if (this.hasRowConflictAt(i)) {rowsWithConflict +=1}
       }
@@ -77,11 +78,24 @@
     },
 
     hasColConflictAt: function(colIndex){
-      return false; // fixme
+      var presentInCol = 0;
+      var rows = this.get('n');
+      for (var i =0; i<rows; i++) {
+        if (this.get(i)[colIndex] === 1) {
+          presentInCol += 1;
+        }
+      }
+      if (presentInCol > 1) {return true;}
+      else {return false;}
     },
 
     hasAnyColConflicts: function(){
-      return false; // fixme
+      var colsWithConflict = 0;
+      var rows = this.get('n');
+      for (var i = 0; i < rows; i++) {
+        if (this.hasColConflictAt(i)) {colsWithConflict +=1}
+      }
+      return !!colsWithConflict;
     },
 
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
