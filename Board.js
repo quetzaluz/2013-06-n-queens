@@ -3,7 +3,7 @@
   window.Board = Backbone.Model.extend({
 
     initialize: function(params){
-      if (params.n) {
+      if (arguments.length === 'number') {
         this.set(makeEmptyMatrix(this.get('n')));
       } else {
         this.set('n', params.length);
@@ -59,10 +59,13 @@
 
     hasRowConflictAt: function(rowIndex){
       var presentInRow = 0;
-      for (var i =0; i < this.rows()[0].length; i++) {
+      var i = 0;
+      while (i < this.rows()[0].length) {
         if (this.get(rowIndex)[i] === 1) {
           presentInRow += 1;
-        }
+          i += 1;
+        } else {i += 1;}
+        if (presentInRow === 2) {break;}
       }
       if (presentInRow > 1) {return true;}
       else {return false;}
@@ -71,19 +74,23 @@
     hasAnyRowConflicts: function(){
       var rowsWithConflict = 0;
       var rows = this.get('n');
-      for (var i = 0; i < rows; i++) {
-        if (this.hasRowConflictAt(i)) {rowsWithConflict +=1}
+      var i = 0;
+      while (i < rows) {
+        if (this.hasRowConflictAt(i)) {rowsWithConflict +=1; break;
+        } else {i +=1;}
       }
       return !!rowsWithConflict;
     },
 
     hasColConflictAt: function(colIndex){
       var presentInCol = 0;
-      var rows = this.get('n');
-      for (var i =0; i<rows; i++) {
+      var i = 0;
+      while (i < this.get('n')) {
         if (this.get(i)[colIndex] === 1) {
           presentInCol += 1;
-        }
+          i += 1;
+        } else {i += 1;}
+        if (presentInCol === 2) {break;}
       }
       if (presentInCol > 1) {return true;}
       else {return false;}
@@ -92,8 +99,10 @@
     hasAnyColConflicts: function(){
       var colsWithConflict = 0;
       var rows = this.get('n');
-      for (var i = 0; i < rows; i++) {
-        if (this.hasColConflictAt(i)) {colsWithConflict +=1}
+      var i = 0;
+      while (i < rows) {
+        if (this.hasColConflictAt(i)) {colsWithConflict +=1; break;
+        } else {i +=1;}
       }
       return !!colsWithConflict;
     },

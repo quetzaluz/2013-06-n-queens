@@ -46,23 +46,26 @@ window.countNRooksSolutions = function(n){
 };
 
 window.findNQueensSolution = function(n){
+  var board = board || new Board(makeEmptyMatrix(n));
   var solution;
   var i = 0;
-  var board = new Board(makeEmptyMatrix(n));
   //debugger;
   function tryConfig(i) {
     for (var j = 0; j < n; j++) {
       if (board._isInBounds(j, i)) {board.togglePiece(j, i);}
       if (i < n) {
-        tryConfig(i+1);
+        i += 1;
+        tryConfig(i);
       }
       if (i === n && board.hasAnyQueensConflicts() === false) {
         solution = board.rows();
       }
-      if (board.hasAnyQueensConflicts()) {board.togglePiece(j, i);}
+      if (board.hasAnyQueensConflicts()) {
+        board.togglePiece(j, i);
+        i -= 1;
+      }
     }
-    
-    return solution;
+    if (typeof solution !== 'undefined') {solution;}
   };
   tryConfig(0);
   if (solution) {
