@@ -61,8 +61,27 @@ Will try to implement a structure similar to above.*/
 
 
 window.findNQueensSolution = function(n){
-  var solution = undefined; //fixme
-
+  //debugger;
+  var solution;
+  if (typeof n === 'number') {
+    var i = 0;
+    var board = new Board(makeEmptyMatrix(n));
+  }
+  function tryConfig(i) {
+    for (var j = 0; j < n; j++) {
+      if (board.hasAnyQueensConflicts() === false) {
+        board.get(j)[i] = 1;
+        if (i < n) {
+          tryConfig(i+1);
+        } 
+        if (board.hasAnyQueensConflicts() === false) {
+          solution = board.rows();
+        }
+        board.get(j)[i] = 0;
+      }
+    }
+  };
+  tryConfig(i);
   console.log('Single solution for ' + n + ' queens:', solution);
   return solution;
 };
