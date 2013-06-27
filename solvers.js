@@ -64,37 +64,33 @@ Will try to implement a structure similar to above.*/
 
 
 window.findNQueensSolution = function(n){
-  //debugger;
   var solution;
   if (typeof n === 'number') {
     var i = 0;
-    var board = new Board(makeEmptyMatrix(n));
   }
   function tryConfig(i) {
+    var board = new Board(makeEmptyMatrix(n));
     for (var j = 0; j < n; j++) {
       if (board.hasAnyQueensConflicts() === false) {
-        board.get(j)[i] = 1;
+        if (board._isInBounds(j, i)) {board.togglePiece(j, i);}
         if (i < n) {
           tryConfig(i+1);
-        } 
-        if (board.hasAnyQueensConflicts() === false) {
-          solution = board.rows();
-          for (var i=0; i<solution.length; i++) {
-            console.log(solution[i]);
-           }
         }
-        board.get(j)[i] = 0;
+        else if (board.hasAnyQueensConflicts() === false) {
+          solution = board.rows();
+        }
+        if (board.hasAnyQueensConflicts()) {board.togglePiece(j, i);}
       }
     }
+    return solution;
   };
   tryConfig(0);
-  if (solution !== undefined) {
-    console.log('Single solution for ' + n + ' queens:');
-    for (var i=0; i<solution.length; i++) {
+  if (solution) {
+  console.log('Single solution for ' + n + ' queens:');
+  for (var i=0; i<solution.length; i++) {
     console.log(solution[i]);
-  }
-    return solution;
-  }
+  }}
+  return solution;
 };
 
 window.countNQueensSolutions = function(n){
