@@ -14,13 +14,16 @@ window.findNRooksSolution = function(n){
   var solution = board.rows();
   for (var i = 0; i < n/2; i++) {
     if ((i+1)*2-1 < n) { 
-      solution[i][((i+1)*2)-1] = true;
+      solution[i][((i+1)*2)-1] = 1;
     }
     if (i*2 < n){
-      solution[i+Math.floor(n/2)][i*2] = true;
+      solution[i+Math.floor(n/2)][i*2] = 1;
     }
   }
-  console.log('Single solution for ' + n + ' rooks:', solution);
+  console.log('Single solution for ' + n + ' rooks:');
+  for (var i=0; i<solution.length; i++) {
+    console.log(solution[i]);
+  }
   return solution;
 };
 
@@ -76,15 +79,22 @@ window.findNQueensSolution = function(n){
         } 
         if (board.hasAnyQueensConflicts() === false) {
           solution = board.rows();
-          i = n;
+          for (var i=0; i<solution.length; i++) {
+            console.log(solution[i]);
+           }
         }
         board.get(j)[i] = 0;
       }
     }
   };
-  tryConfig(i);
-  console.log('Single solution for ' + n + ' queens:', solution);
-  if (solution) {return solution;}
+  tryConfig(0);
+  if (solution !== undefined) {
+    console.log('Single solution for ' + n + ' queens:');
+    for (var i=0; i<solution.length; i++) {
+    console.log(solution[i]);
+  }
+    return solution;
+  }
 };
 
 window.countNQueensSolutions = function(n){
