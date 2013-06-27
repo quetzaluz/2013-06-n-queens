@@ -45,43 +45,23 @@ window.countNRooksSolutions = function(n){
   return solutionCount;
 };
 
-/*PSUEDO CODE -- this looks like a good structure given the currently
-defined methods. From http://www.brian-borowski.com/Software/NQueens/
-function tryConfig(i: integer) {
-   for j <- 1 to n do {
-      if safe then {
-         select jth candidate;
-         set queen;
-         if i < n then
-            tryConfig(i+1);
-         else
-            record solution;
-         remove queen;
-      }
-   }
-}
-Will try to implement a structure similar to above.*/
-
-
 window.findNQueensSolution = function(n){
   var solution;
-  if (typeof n === 'number') {
-    var i = 0;
-  }
+  var i = 0;
+  var board = new Board(makeEmptyMatrix(n));
+  //debugger;
   function tryConfig(i) {
-    var board = new Board(makeEmptyMatrix(n));
     for (var j = 0; j < n; j++) {
-      if (board.hasAnyQueensConflicts() === false) {
-        if (board._isInBounds(j, i)) {board.togglePiece(j, i);}
-        if (i < n) {
-          tryConfig(i+1);
-        }
-        else if (board.hasAnyQueensConflicts() === false) {
-          solution = board.rows();
-        }
-        if (board.hasAnyQueensConflicts()) {board.togglePiece(j, i);}
+      if (board._isInBounds(j, i)) {board.togglePiece(j, i);}
+      if (i < n) {
+        tryConfig(i+1);
       }
+      if (i === n && board.hasAnyQueensConflicts() === false) {
+        solution = board.rows();
+      }
+      if (board.hasAnyQueensConflicts()) {board.togglePiece(j, i);}
     }
+    
     return solution;
   };
   tryConfig(0);
