@@ -76,6 +76,7 @@ window.findNQueensSolution = function(n){
         } 
         if (board.hasAnyQueensConflicts() === false) {
           solution = board.rows();
+          i = n;
         }
         board.get(j)[i] = 0;
       }
@@ -83,12 +84,23 @@ window.findNQueensSolution = function(n){
   };
   tryConfig(i);
   console.log('Single solution for ' + n + ' queens:', solution);
-  return solution;
+  if (solution) {return solution;}
 };
 
 window.countNQueensSolutions = function(n){
-  var solutionCount = undefined; //fixme
-
+  var allSolutions = _.memoize(function(n) {
+    if (!n) return [true]; //Written as such to conform to spec test-- [] preferable
+    if (n === 1) return [[[true]]]; //One piece solutions true no matter what
+    var solutions = [];
+    for (var i = 0; i < n; i++) {
+      _.each(allSolutions(n-1), function(n){
+        //By recursively calling allSolutions with n-1 as above, not infinite
+        solutions.push(window.findNQueensSolution(n));
+      });
+    }
+    return solutions;
+  });
+  solutionCount = allSolutions(n).length;
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
