@@ -9,6 +9,12 @@ window.findNRooksSolution = function(n){
   //opting for the solution before. I found this solution from the following:
   //http://logicmason.com/2013/a-recursive-algorithm-for-generating-all-n-rooks-solutions-and-a-linear-time-n-queens-solution/
   //I plan to revisit this and come up with a solution with a more iterative structure.
+  //An alternative solution that does not generate actual game boards:
+  //  var solution = _.times(function(i) {
+  //   solution[i] = _.times(function(i) {
+  //     return n === + i ? 1 : 0;
+  //   });
+  // });
   if (typeof n === 'number') {var board = new Board(makeEmptyMatrix(n));}
   else {return false;}
   var solution = board.rows();
@@ -28,6 +34,8 @@ window.findNRooksSolution = function(n){
 };
 
 window.countNRooksSolutions = function(n){
+  //NOTE: The following can be expressed with the following mathematical expression:
+  //return Math.factorial(n);
   var allSolutions = _.memoize(function(n) {
     if (!n) return [true]; //Written as such to conform to spec test-- [] preferable
     if (n === 1) return [[[true]]]; //One piece solutions true no matter what
@@ -51,6 +59,7 @@ window.findNQueensSolution = function(n){
 var solution;
   if (typeof n === 'number') {
     var i = 0;
+    //debugger;
     var board = new Board(makeEmptyMatrix(n));
   }
   function tryConfig(i) {
@@ -67,7 +76,7 @@ var solution;
         }
         if (board.hasAnyQueensConflicts()) {
           board.togglePiece(j, i);
-          i -= 1;
+          i += 1;
         }
       }
     }
@@ -95,6 +104,7 @@ window.countNQueensSolutions = function(n){
     while (openPositions != 0) {
       nextPosition = openPositions & (-openPositions);
       openPositions -= nextPosition;
+      console.log ("minor, col, major before next traversal:", (minorDiagonals + nextPosition) << 1, columns + nextPosition, (majorDiagonals + nextPosition) >> 1)
       traverse((minorDiagonals + nextPosition) << 1, columns + nextPosition, (majorDiagonals + nextPosition) >> 1)
     }
   }
