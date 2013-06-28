@@ -46,26 +46,32 @@ window.countNRooksSolutions = function(n){
 };
 
 window.findNQueensSolution = function(n){
-  var board = board || new Board(makeEmptyMatrix(n));
-  var solution;
-  var i = 0;
-  //debugger;
+  //Attempting bitwise solution after lecture, based closely off of
+  //https://github.com/bigthyme/nQueens/blob/master/nQueens.js
+var solution;
+  if (typeof n === 'number') {
+    var i = 0;
+    var board = new Board(makeEmptyMatrix(n));
+  }
   function tryConfig(i) {
     for (var j = 0; j < n; j++) {
-      if (board._isInBounds(j, i)) {board.togglePiece(j, i);}
-      if (i < n) {
-        i += 1;
-        tryConfig(i);
-      }
-      if (i === n && board.hasAnyQueensConflicts() === false) {
-        solution = board.rows();
-      }
-      if (board.hasAnyQueensConflicts()) {
-        board.togglePiece(j, i);
-        i -= 1;
+      if (board.hasAnyQueensConflicts() === false) {
+        if (board._isInBounds(j, i)) {
+          board.togglePiece(j, i);
+        }
+        if (i < n && !board.hasAnyQueensConflicts()) {
+          tryConfig(i+1);
+        }
+        else if (i === n && board.hasAnyQueensConflicts() === false) {
+          solution = board.rows();
+        }
+        if (board.hasAnyQueensConflicts()) {
+          board.togglePiece(j, i);
+          i -= 1;
+        }
       }
     }
-    if (typeof solution !== 'undefined') {solution;}
+    return solution;
   };
   tryConfig(0);
   if (solution) {
@@ -77,21 +83,24 @@ window.findNQueensSolution = function(n){
 };
 
 window.countNQueensSolutions = function(n){
-  var allSolutions = _.memoize(function(n) {
-    if (!n) return [true]; //Written as such to conform to spec test-- [] preferable
-    if (n === 1) return [[[true]]]; //One piece solutions true no matter what
-    var solutions = [];
-    for (var i = 0; i < n; i++) {
-      _.each(allSolutions(n-1), function(n){
-        //By recursively calling allSolutions with n-1 as above, not infinite
-        solutions.push(window.findNQueensSolution(n));
-      });
+  //Attempting bitwise solution after lecture
+  var solutions = 0;
+  var nScreen = (1 << n) - 1;
+  var traverse = function(minorDiagonals, columns, majorDiagonals) {
+    //def queen(row, ld, rd):
+    if (columns === nScreen) {
+      solutions += 1
     }
-    return solutions;
-  });
-  solutionCount = allSolutions(n).length;
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+    openPositions = nScreen & (~(minorDiagonals | columns | majorDiagonals))
+    while (openPositions != 0) {
+      nextPosition = openPositions & (-openPositions);
+      openPositions -= nextPosition;
+      traverse((minorDiagonals + nextPosition) << 1, columns + nextPosition, (majorDiagonals + nextPosition) >> 1)
+    }
+  }
+  traverse(0,0,0);
+  console.log('Number of solutions for ' + n + ' queens:', solutions);
+  return solutions;
 };
 
 
